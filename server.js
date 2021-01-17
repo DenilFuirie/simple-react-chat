@@ -1,31 +1,25 @@
 const express = require('express');
+const socketio = require('socket.io');
+const http = require('http');
+
+const PORT = process.env.PORT || 5000;
+
+const router = require('./src/router')
 
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['my-custom-header'],
-        credentials: true
-    }
+const server = http.createServer(app);
+const io = socketio(server);
+
+io.on('connection', (socket) => {
+    console.log('We have a new connection!');
+
+    socket.on('disconnect',() => {
+        console.log('User had left!');
+    })
 });
 
-const rooms = new Map();
+app.use(router);
 
-
-
-app.get('/rooms', function(req, res) {
-    res.json(rooms);
-});
-
-io.on('connection', socket => {
-    console.log('socket connected', socket.id);
+server.listen(PORT, () => {
+    console.log(`server has started on port ${PORT}`)
 })
-
-server.listen(9999, (err) => {
-    if (err) {
-        throw Error(err);
-    }
-    console.log('server is started')
-});

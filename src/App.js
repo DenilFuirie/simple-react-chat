@@ -1,15 +1,15 @@
 import React from 'react';
-import socket from './socket';
-import JoinBlock from "./JoinBlock/JoinBlock";
 
+import { BrowserRouter as Router, Route} from 'react-router-dom'
 
-function App() {
+import Join from './components/Join';
+import Chat from './components/Chat';
 
-  return (
-      <div className="wrapper">
-        <JoinBlock />
-      </div>
-  );
-}
+const App = () => (
+    <Router>
+        <Route path="/" exact component={Join} />
+        <Route path="/chat" component={Chat} />
+    </Router>
+);
 
 export default App;
